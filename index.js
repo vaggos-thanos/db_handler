@@ -35,6 +35,25 @@ class db_handler {
         return db;
     }
 
+    async get_all_row( table_name) {
+        let while_v = true
+        let Rows = []
+
+        this.identifier.query(`SELECT * FROM ${table_name}`, (err, rows) => {
+            if (err) {
+                throw err;
+            }
+            while_v = false
+            Rows.push(rows);
+        })
+
+        while(while_v) {
+            await sleep(1000)
+        }
+
+        return Rows[0];
+    }
+
     async get_row(table_name, key_name, key_value) {
         let while_v = true
         let Rows = []
@@ -119,37 +138,6 @@ class db_handler {
         return code[0];
     }
 
-    async get_table( table_name) {
-        let while_v = true
-        let Rows = []
-
-        this.identifier.query(`SELECT * FROM ${table_name}`, (err, rows) => {
-            if (err) {
-                throw err;
-            }
-            while_v = false
-            Rows.push(rows);
-        })
-
-        while(while_v) {
-            await sleep(1000)
-        }
-
-        return Rows[0];
-    }
-
-    async create_table() {
-    
-    }
-
-    async update_table() {
-
-    }
-
-    async delete_table() {
-    
-    }
-
     async query(query) {
         let while_v = true
         let Rows = []
@@ -181,14 +169,6 @@ function log(msg, toggle, color_) {
 async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
-(async () => {
-    const mySQl = require('mysql2');
-    const dbhandler = new db_handler(mySQl);
-    await dbhandler.login('localhost', 'root', 'mamitsa2018_', 'vaggos');
-    const data = await dbhandler.create_row('student', 'student_id, name, major', "'4', 'test_name', 'bio'")
-    console.log(data)
-})();
 
 module.exports = {
     db_handler
